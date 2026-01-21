@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "9ATGebFAS8c=",
+  "success": true,
+  "projectFilePath": "/home/Linus/Projects/WeebUntis/Testing/Testing.csproj",
+  "expectedPackageFiles": [
+    "/home/Linus/.nuget/packages/microsoft.aspnetcore.app.ref/10.0.0/microsoft.aspnetcore.app.ref.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
