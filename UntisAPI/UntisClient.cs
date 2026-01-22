@@ -1,9 +1,14 @@
 ﻿using System.Net;
+using UntisAPI.ResourceTypes;
 
 namespace UntisAPI;
 
 public class UntisClient : IDisposable
 {
+    public bool Authenticated => _token is not null;
+    public Student Student;
+    public Class Class;
+
     private readonly HttpClient _client;
     private readonly HttpClientHandler _handler;
     private readonly string _apiUrl = "https://hhgym.webuntis.com/WebUntis";
@@ -52,11 +57,27 @@ public class UntisClient : IDisposable
         _token = await tokenResponse.Content.ReadAsStringAsync();
     }
 
+    private async Task fetchIdentity()
+    {
+        HttpResponseMessage identityResponse = await _client.GetAsync(
+            "{_apiUrl}/api/rest/view/v1/timetable/filter?resourceType=STUDENT"
+        );
+        // TODO:
+    }
+
     public async Task<List<List<Entry>>> GetTimetableAsync(DateTime start, DateTime end)
     {
+        if (!Authenticated)
+        {
+            throw new InvalidOperationException(
+                "Client not authenticated. Authenticate using the AuthenticateAsync method."
+            );
+        }
+
         HttpResponseMessage timetableResponse = await _client.GetAsync(
-            $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}"
+            $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
         );
+        // TODO:
     }
 
     public void Dispose()

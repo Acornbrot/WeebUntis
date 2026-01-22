@@ -5,15 +5,15 @@ namespace UntisAPI.ResourceTypes
     public abstract class BasicUntisEntity
     {
         [JsonProperty("status")]
-        public UntisStatus Status;
+        public required UntisStatus Status;
 
         [JsonProperty("shortName")]
-        public string ShortName;
+        public required string ShortName;
 
         [JsonProperty("longName")]
-        public string LongName;
+        public required string LongName;
 
         [JsonProperty("displayName")]
-        public string DisplayName;
+        public required string DisplayName;
     }
 }

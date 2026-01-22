@@ -5,9 +5,9 @@ namespace UntisAPI.ResourceTypes
     public class Duration
     {
         [JsonProperty("start")]
-        public DateTimeOffset Start;
+        public required DateTimeOffset Start;
 
         [JsonProperty("end")]
-        public DateTimeOffset End;
+        public required DateTimeOffset End;
     }
 }

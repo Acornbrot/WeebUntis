@@ -1,8 +1,13 @@
+using Newtonsoft.Json;
+
 namespace UntisAPI.ResourceTypes
 {
     public class PositionEntry<T>
     {
-        public T Current;
-        public T Removed;
+        [JsonProperty("current")]
+        public T? Current;
+
+        [JsonProperty("removed")]
+        public T? Removed;
     }
 }

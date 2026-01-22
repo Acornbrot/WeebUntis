@@ -5,12 +5,12 @@ namespace UntisAPI.ResourceTypes
     public class Day
     {
         [JsonProperty("date")]
-        public DateTimeOffset Date;
+        public required DateTimeOffset Date;
 
         [JsonProperty("status")]
-        public UntisStatus Status;
+        public required UntisStatus Status;
 
         [JsonProperty("gridEntries")]
-        public List<Lesson> Lessons;
+        public required List<Lesson> Lessons;
     }
 }

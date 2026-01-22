@@ -5,45 +5,45 @@ namespace UntisAPI.ResourceTypes
     public class Lesson
     {
         [JsonProperty("duration")]
-        public Duration Duration;
+        public required Duration Duration;
 
         [JsonProperty("type")]
-        public LessonType Type;
+        public required LessonType Type;
 
         [JsonProperty("status")]
-        public UntisStatus Status;
+        public required UntisStatus Status;
 
         [JsonProperty("layoutStartPosition")]
-        public int LayoutStartPosition;
+        public required int LayoutStartPosition;
 
         [JsonProperty("layoutWidth")]
-        public int LayoutWidth;
+        public required int LayoutWidth;
 
         [JsonProperty("layoutGroup")]
-        public int LayoutGroup;
+        public required int LayoutGroup;
 
         [JsonProperty("color")]
-        public string Color;
+        public required string Color;
 
         [JsonProperty("notesAll")]
-        public string Notes;
+        public string? Notes;
 
         [JsonProperty("icons")]
-        public List<Icon> Icons;
+        public List<Icon>? Icons;
 
         [JsonProperty("position1")]
-        public List<PositionEntry<Subject>> Subject;
+        public List<PositionEntry<Subject>>? Subject;
 
         [JsonProperty("position2")]
-        public List<PositionEntry<Teacher>> Teacher;
+        public List<PositionEntry<Teacher>>? Teacher;
 
         [JsonProperty("position3")]
-        public List<PositionEntry<Room>> Room;
+        public List<PositionEntry<Room>>? Room;
 
         [JsonProperty("position4")]
-        public List<PositionEntry<Info>> Info;
+        public List<PositionEntry<Info>>? Info;
 
         [JsonProperty("substitutionText")]
-        public string SubstitutionText;
+        public string? SubstitutionText;
     }
 }
