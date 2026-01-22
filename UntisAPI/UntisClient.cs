@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using UntisAPI.ResourceTypes;
 
 namespace UntisAPI;
 
@@ -50,6 +51,13 @@ public class UntisClient : IDisposable
         }
         tokenResponse.EnsureSuccessStatusCode();
         _token = await tokenResponse.Content.ReadAsStringAsync();
+    }
+
+    public async Task<List<List<Entry>>> GetTimetableAsync(DateTime start, DateTime end)
+    {
+        HttpResponseMessage timetableResponse = await _client.GetAsync(
+            $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}"
+        );
     }
 
     public void Dispose()
