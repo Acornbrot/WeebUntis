@@ -1,6 +1,6 @@
 namespace UntisAPI.ResourceTypes
 {
-    public enum PeriodType
+    public enum LessonType
     {
         NormalTeaching,
         Event,

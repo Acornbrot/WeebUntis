@@ -1,6 +1,6 @@
 namespace UntisAPI.ResourceTypes
 {
-    public struct PeriodLine<T>
+    public class PositionEntry<T>
     {
         public T Current;
         public T Removed;
