@@ -120,7 +120,7 @@ public class UntisClient : IDisposable
         _classes = identity.Classes;
     }
 
-    public async Task<TimeTable> GetTimetableAsync(DateTime start, DateTime end)
+    public async Task<TimeTable> GetTimetableAsync(DateTimeOffset start, DateTimeOffset end)
     {
         if (!Authenticated)
         {
@@ -132,8 +132,19 @@ public class UntisClient : IDisposable
         HttpResponseMessage timetableResponse = await _client.GetAsync(
             $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
         );
-        // TODO:
-        throw new NotImplementedException();
+        timetableResponse.EnsureSuccessStatusCode();
+
+        string json = await timetableResponse.Content.ReadAsStringAsync();
+
+        JsonSerializerSettings settings = new()
+        {
+            Converters = [new LessonTypeConverter(), new UntisStatusConverter()],
+        };
+
+        return JsonConvert.DeserializeObject<TimeTable>(json, settings)
+            ?? throw new InvalidDataException(
+                "Found unexpected json object while fetching timetable"
+            );
     }
 
     public void Dispose()
