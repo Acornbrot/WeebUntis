@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using UntisAPI;
 using UntisAPI.ResourceTypes;
@@ -21,8 +20,8 @@ UntisClient client = new();
 await client.AuthenticateAsync(username, password);
 
 DateTimeOffset now = DateTimeOffset.Now;
-int diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
-DateTimeOffset weekStart = now.AddDays(-diff).Date;
+int diff = (7 + (now.DayOfWeek - DayOfWeek.Saturday)) % 7;
+DateTimeOffset weekStart = now.AddDays(-diff + 2).Date;
 DateTimeOffset weekEnd = weekStart.AddDays(5);
 
 TimeTable timeTable = await client.GetTimetableAsync(weekStart, weekEnd);
@@ -31,3 +30,23 @@ string json = JsonSerializer.Serialize(
     timeTable,
     new JsonSerializerOptions { WriteIndented = true }
 );
+
+List<Lesson> ausfaelle =
+[
+    .. timeTable.Days.SelectMany(d =>
+        d.Lessons.Where(l =>
+            l is { Status: UntisStatus.Changed, Teacher: { Current: null, Removed: not null } }
+        )
+    ),
+];
+
+Console.WriteLine("# Ausfälle:");
+
+foreach (Lesson ausfall in ausfaelle)
+{
+    Console.WriteLine();
+    Console.WriteLine($"Fach: {ausfall.Subject!.Current.DisplayName}");
+    Console.WriteLine($"Lehrer: {ausfall.Teacher!.Removed!.DisplayName}");
+    Console.WriteLine($"Raum: {ausfall.Room!.Current.DisplayName}");
+    Console.WriteLine($"Uhrzeit: {ausfall.Duration.Start} - {ausfall.Duration.End}");
+}

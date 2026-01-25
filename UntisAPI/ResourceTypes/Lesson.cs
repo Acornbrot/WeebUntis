@@ -32,13 +32,22 @@ namespace UntisAPI.ResourceTypes
         public List<Icon>? Icons;
 
         [JsonProperty("position1")]
-        public List<PositionEntry<Subject>>? Subject;
+        public List<PositionEntry<Subject>>? Subjects;
+
+        [JsonIgnore]
+        public PositionEntry<Subject>? Subject => Subjects?[0];
 
         [JsonProperty("position2")]
-        public List<PositionEntry<Teacher>>? Teacher;
+        public List<PositionEntry<Teacher>>? Teachers;
+
+        [JsonIgnore]
+        public PositionEntry<Teacher>? Teacher => Teachers?[0];
 
         [JsonProperty("position3")]
-        public List<PositionEntry<Room>>? Room;
+        public List<PositionEntry<Room>>? Rooms;
+
+        [JsonIgnore]
+        public PositionEntry<Room>? Room => Rooms?[0];
 
         [JsonProperty("position4")]
         public List<PositionEntry<Info>>? Info;
