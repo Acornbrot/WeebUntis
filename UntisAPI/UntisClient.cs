@@ -6,17 +6,12 @@ using UntisAPI.ResourceTypes;
 
 namespace UntisAPI;
 
-public class UntisClient : IDisposable
+public sealed class UntisClient : IDisposable
 {
-    public bool Authenticated => _token is not null;
     public Student Student
     {
         get
         {
-            if (!Authenticated)
-            {
-                throw new InvalidOperationException("Client not authenticated.");
-            }
             if (_student is null)
             {
                 throw new InvalidOperationException(
@@ -31,10 +26,6 @@ public class UntisClient : IDisposable
     {
         get
         {
-            if (!Authenticated)
-            {
-                throw new InvalidOperationException("Client not authenticated.");
-            }
             if (_classes is null)
             {
                 throw new InvalidOperationException(
@@ -48,13 +39,16 @@ public class UntisClient : IDisposable
 
     private readonly HttpClient _client;
     private readonly HttpClientHandler _handler;
-    private readonly string _apiUrl = "https://hhgym.webuntis.com/WebUntis";
-    private string? _token;
+    private readonly string _apiUrl;
+    private string _token;
 
-    private Student? _student;
-    private List<Class>? _classes;
+    private Student _student;
+    private List<Class> _classes;
 
-    public UntisClient()
+    // The warning can safely be ignored because the static
+    // factory method will ensure that the instance has valid properties
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    private UntisClient(string apiUrl)
     {
         _handler = new HttpClientHandler
         {
@@ -64,6 +58,15 @@ public class UntisClient : IDisposable
         };
 
         _client = new HttpClient(_handler);
+        _apiUrl = apiUrl.TrimEnd('/');
+    }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
+    public static async Task<UntisClient> CreateAsync(string user, string password, string apiUrl)
+    {
+        UntisClient client = new(apiUrl);
+        await client.AuthenticateAsync(user, password);
+        return client;
     }
 
     public async Task AuthenticateAsync(string username, string password)
@@ -75,7 +78,6 @@ public class UntisClient : IDisposable
         // register session id on the server
         Dictionary<string, string> authRequestBody = new()
         {
-            { "school", "hhgym" },
             { "j_username", username },
             { "j_password", password },
         };
@@ -87,10 +89,19 @@ public class UntisClient : IDisposable
         );
         authResponse.EnsureSuccessStatusCode();
 
+        // j_spring_security_check returns 200 regardless of the credentials
+        // so I wrap the token request in a try catch
+
         // retrieve token
         HttpResponseMessage tokenResponse = await _client.GetAsync($"{_apiUrl}/api/token/new");
         tokenResponse.EnsureSuccessStatusCode();
         _token = await tokenResponse.Content.ReadAsStringAsync();
+
+        // For some reason Untis returns an html document when the client is not authenticated
+        if (_token.Contains("\n"))
+        {
+            throw new ArgumentException("Invalid credentials");
+        }
 
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             "Bearer",
@@ -122,13 +133,6 @@ public class UntisClient : IDisposable
 
     public async Task<TimeTable> GetTimetableAsync(DateTimeOffset start, DateTimeOffset end)
     {
-        if (!Authenticated)
-        {
-            throw new InvalidOperationException(
-                "Client not authenticated. Authenticate using the AuthenticateAsync method."
-            );
-        }
-
         HttpResponseMessage timetableResponse = await _client.GetAsync(
             $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
         );

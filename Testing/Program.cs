@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using UntisAPI;
 using UntisAPI.ResourceTypes;
@@ -16,8 +17,11 @@ string password =
     config["Untis:Password"]
     ?? throw new InvalidOperationException("Please add Untis:Password to the appsettings");
 
-UntisClient client = new();
-await client.AuthenticateAsync(username, password);
+UntisClient client = await UntisClient.CreateAsync(
+    username,
+    password,
+    "https://hhgym.webuntis.com/WebUntis"
+);
 
 DateTimeOffset now = DateTimeOffset.Now;
 int diff = (7 + (now.DayOfWeek - DayOfWeek.Saturday)) % 7;
@@ -48,5 +52,7 @@ foreach (Lesson ausfall in ausfaelle)
     Console.WriteLine($"Fach: {ausfall.Subject!.Current.DisplayName}");
     Console.WriteLine($"Lehrer: {ausfall.Teacher!.Removed!.DisplayName}");
     Console.WriteLine($"Raum: {ausfall.Room!.Current.DisplayName}");
-    Console.WriteLine($"Uhrzeit: {ausfall.Duration.Start} - {ausfall.Duration.End}");
+    Console.WriteLine(
+        $"Uhrzeit: {ausfall.Duration.Start.ToString("o", CultureInfo.InvariantCulture)} - {ausfall.Duration.End.ToString("O", CultureInfo.InvariantCulture)}"
+    );
 }
