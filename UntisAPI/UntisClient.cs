@@ -41,6 +41,8 @@ public sealed class UntisClient : IDisposable
     private readonly HttpClientHandler _handler;
     private readonly string _apiUrl;
     private string _token;
+    private string _user;
+    private string _password;
 
     private Student _student;
     private List<Class> _classes;
@@ -71,6 +73,10 @@ public sealed class UntisClient : IDisposable
 
     public async Task AuthenticateAsync(string username, string password)
     {
+        // need to store credentials for refreshing the token later (untis has 30min timeout)
+        _user = username;
+        _password = password;
+
         // get JSESSIONID cookie
         HttpResponseMessage initialResponse = await _client.GetAsync(_apiUrl);
         initialResponse.EnsureSuccessStatusCode();
@@ -113,8 +119,8 @@ public sealed class UntisClient : IDisposable
 
     private async Task fetchIdentity()
     {
-        HttpResponseMessage identityResponse = await _client.GetAsync(
-            $"{_apiUrl}/api/rest/view/v1/timetable/filter?resourceType=STUDENT"
+        HttpResponseMessage identityResponse = await get(
+            "api/rest/view/v1/timetable/filter?resourceType=STUDENT"
         );
         identityResponse.EnsureSuccessStatusCode();
 
@@ -133,8 +139,8 @@ public sealed class UntisClient : IDisposable
 
     public async Task<TimeTable> GetTimetableAsync(DateTimeOffset start, DateTimeOffset end)
     {
-        HttpResponseMessage timetableResponse = await _client.GetAsync(
-            $"{_apiUrl}/api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
+        HttpResponseMessage timetableResponse = await get(
+            $"api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
         );
         timetableResponse.EnsureSuccessStatusCode();
 
@@ -149,6 +155,25 @@ public sealed class UntisClient : IDisposable
             ?? throw new InvalidDataException(
                 "Found unexpected json object while fetching timetable"
             );
+    }
+
+    private async Task<HttpResponseMessage> get(string url, bool retryAuth = true)
+    {
+        try
+        {
+            HttpResponseMessage response = await _client.GetAsync($"{_apiUrl}/{url}");
+            response.EnsureSuccessStatusCode();
+            return response;
+        }
+        catch (HttpRequestException e)
+        {
+            if (e.StatusCode == HttpStatusCode.Unauthorized && retryAuth)
+            {
+                await AuthenticateAsync(_user, _password);
+                return await get(url, false);
+            }
+            throw;
+        }
     }
 
     public void Dispose()
