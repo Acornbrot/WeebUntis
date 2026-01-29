@@ -5,6 +5,6 @@ namespace UntisAPI.ResourceTypes
     public class Class : BasicUntisEntity
     {
         [JsonProperty("id")]
-        public required int Id;
+        public required int Id { get; set; }
     }
 }

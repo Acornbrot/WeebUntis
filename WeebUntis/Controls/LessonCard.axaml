@@ -1,0 +1,112 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:rt="using:UntisAPI.ResourceTypes"
+  mc:Ignorable="d"
+  d:DesignWidth="300"
+  d:DesignHeight="120"
+  x:Class="WeebUntis.Controls.LessonCard"
+  x:DataType="rt:Lesson"
+>
+  <Border
+    CornerRadius="8"
+    Padding="12"
+    Margin="12"
+    BorderThickness="2"
+    BorderBrush="{Binding Color}"
+    Background="#f444"
+  >
+    <StackPanel Spacing="4">
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Border
+          CornerRadius="2"
+          BorderThickness="0"
+          IsVisible="{Binding Subject.Removed, Converter={x:Static ObjectConverters.IsNotNull}}"
+          Background="{Binding Color}"
+        >
+          <TextBlock
+            Text="{Binding Subject.Removed.DisplayName}"
+            TextDecorations="Strikethrough"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Background="{Binding Color}"
+            FontSize="14"
+          />
+        </Border>
+        <TextBlock
+          Text="{Binding Subject.Current.DisplayName}"
+          FontWeight="SemiBold"
+          FontSize="14"
+        />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Border
+          CornerRadius="4"
+          BorderThickness="2"
+          IsVisible="{Binding Room.Removed, Converter={x:Static ObjectConverters.IsNotNull}}"
+          Background="{Binding Color}"
+        >
+          <TextBlock
+            Text="{Binding Room.Removed.DisplayName}"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+            Background="{Binding Color}"
+            FontSize="14"
+          >
+            <TextBlock.TextDecorations>
+              <TextDecorationCollection>
+                <TextDecoration
+                  Location="Strikethrough"
+                  Stroke="White"
+                  StrokeThickness="80"
+                />
+              </TextDecorationCollection>
+            </TextBlock.TextDecorations>
+          </TextBlock>
+        </Border>
+        <TextBlock
+          Text="{Binding Room.Current.DisplayName}"
+          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          FontSize="12"
+        />
+      </StackPanel>
+
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <TextBlock
+          IsVisible="{Binding Teacher.Removed, Converter={x:Static ObjectConverters.IsNotNull}}"
+          Text="{Binding Teacher.Removed.DisplayName}"
+          TextDecorations="Strikethrough"
+          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          FontSize="12"
+        />
+        <TextBlock
+          Text="{Binding Teacher.Current.DisplayName}"
+          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          FontSize="12"
+        />
+      </StackPanel>
+
+      <StackPanel
+        Orientation="Horizontal"
+        Spacing="6"
+        IsVisible="{Binding Info, Converter={x:Static ObjectConverters.IsNotNull}}"
+      >
+        <TextBlock
+          IsVisible="{Binding Info.Removed, Converter={x:Static ObjectConverters.IsNotNull}}"
+          Text="{Binding Info.Removed.DisplayName}"
+          TextDecorations="Strikethrough"
+          Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+          FontSize="11"
+          FontStyle="Italic"
+        />
+        <TextBlock
+          Text="{Binding Info.Current.DisplayName}"
+          Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+          FontSize="11"
+          FontStyle="Italic"
+        />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</UserControl>

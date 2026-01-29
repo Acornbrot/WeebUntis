@@ -5,9 +5,9 @@ namespace UntisAPI.ResourceTypes
     public class PositionEntry<T>
     {
         [JsonProperty("current")]
-        public required T Current;
+        public T? Current { get; set; }
 
         [JsonProperty("removed")]
-        public T? Removed;
+        public T? Removed { get; set; }
     }
 }

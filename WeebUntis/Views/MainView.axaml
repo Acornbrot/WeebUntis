@@ -4,21 +4,47 @@
   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:vm="using:WeebUntis.ViewModels"
+  xmlns:ctrl="using:WeebUntis.Controls"
   mc:Ignorable="d"
   d:DesignWidth="800"
   d:DesignHeight="450"
   x:Class="WeebUntis.Views.MainView"
   x:DataType="vm:MainViewModel"
 >
-  <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-    <vm:MainViewModel />
-  </Design.DataContext>
-
-  <TextBlock
-    Text="{Binding Greeting}"
-    HorizontalAlignment="Center"
-    VerticalAlignment="Center"
-  />
+  <StackPanel Orientation="Horizontal">
+    <StackPanel>
+      <ctrl:LessonCard Grid.Row="0" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="1" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="2" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+    </StackPanel>
+    <StackPanel>
+      <ctrl:LessonCard Grid.Row="0" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="1" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="2" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+    </StackPanel>
+    <StackPanel>
+      <ctrl:LessonCard Grid.Row="0" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="1" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="2" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+    </StackPanel>
+    <StackPanel>
+      <ctrl:LessonCard Grid.Row="0" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="1" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="2" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+    </StackPanel>
+    <StackPanel>
+      <ctrl:LessonCard Grid.Row="0" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="1" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="2" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+      <ctrl:LessonCard Grid.Row="3" DataContext="{Binding Lesson}" />
+    </StackPanel>
+  </StackPanel>
 </UserControl>
