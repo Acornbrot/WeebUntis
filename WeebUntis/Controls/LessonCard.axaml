@@ -58,8 +58,8 @@
               <TextDecorationCollection>
                 <TextDecoration
                   Location="Strikethrough"
-                  Stroke="White"
                   StrokeThickness="80"
+                  Stroke="White"
                 />
               </TextDecorationCollection>
             </TextBlock.TextDecorations>

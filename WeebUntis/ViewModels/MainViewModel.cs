@@ -1,78 +1,39 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using UntisAPI.ResourceTypes;
+using CommunityToolkit.Mvvm.Input;
+using UntisAPI;
 
 namespace WeebUntis.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string _greeting = "Welcome to Avalonia!";
-
-    [ObservableProperty]
-    private Lesson _lesson;
+    private TimetableViewModel? _timeTable;
 
     public MainViewModel()
     {
-        _lesson = new Lesson()
-        {
-            Color = "#ff0000",
-            Duration = new Duration
-            {
-                Start = DateTimeOffset.Now,
-                End = DateTimeOffset.Now.AddMinutes(67),
-            },
-            LayoutGroup = 0,
-            LayoutStartPosition = 0,
-            LayoutWidth = 1000,
-            Status = UntisStatus.Regular,
-            Type = LessonType.NormalTeaching,
-            Teachers =
-            [
-                new PositionEntry<Teacher>()
-                {
-                    Current = new Teacher()
-                    {
-                        DisplayName = "Johannes Meister",
-                        LongName = "Johannes Meister",
-                        ShortName = "MEI",
-                        Status = UntisStatus.Removed,
-                    },
-                    Removed = new Teacher()
-                    {
-                        DisplayName = "Sabrina Mertins",
-                        LongName = "Sabrina Mertins",
-                        ShortName = "MER",
-                        Status = UntisStatus.Cancelled,
-                    },
-                },
-            ],
-            Rooms =
-            [
-                new PositionEntry<Room>()
-                {
-                    Removed = new Room()
-                    {
-                        DisplayName = "Strahlenschutzbunker (STRB)",
-                        LongName = "Strahlenschutzbunker der Reiterstaffel",
-                        ShortName = "STRB",
-                        Status = UntisStatus.Regular,
-                    },
-                },
-            ],
-            Subjects =
-            [
-                new PositionEntry<Subject>()
-                {
-                    Current = new Subject()
-                    {
-                        DisplayName = "Mathsmaxxing",
-                        LongName = "Mathsmaxxing",
-                        ShortName = "MA",
-                        Status = UntisStatus.Regular,
-                    },
-                },
-            ],
-        };
+        _ = loadTimetableAsync();
+    }
+
+    private async Task loadTimetableAsync()
+    {
+        Console.Write("Untis user: ");
+        string user = Console.ReadLine()!;
+        Console.Write("Untis password: ");
+        string password = Console.ReadLine()!;
+
+        UntisClient _client = await UntisClient.CreateAsync(
+            user,
+            password,
+            "https://hhgym.webuntis.com/WebUntis"
+        );
+
+        DateTimeOffset now = DateTimeOffset.Now;
+        int diff = (7 + (now.DayOfWeek - DayOfWeek.Saturday)) % 7;
+        DateTimeOffset weekStart = now.AddDays(-diff + 2).Date;
+        DateTimeOffset weekEnd = weekStart.AddDays(4);
+
+        TimeTable = new TimetableViewModel(await _client.GetTimetableAsync(weekStart, weekEnd));
     }
 }
