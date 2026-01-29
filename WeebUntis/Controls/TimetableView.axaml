@@ -1,0 +1,59 @@
+<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:c="using:WeebUntis.Controls"
+  xmlns:vm="using:WeebUntis.ViewModels"
+  mc:Ignorable="d"
+  x:Class="WeebUntis.Controls.TimetableView"
+  x:DataType="vm:TimetableViewModel"
+>
+  <ScrollViewer
+    HorizontalScrollBarVisibility="Auto"
+    VerticalScrollBarVisibility="Auto"
+  >
+    <!-- TODO: doesn't scale arbitrarily small (i want text to wrap/cut off) -->
+    <ItemsControl ItemsSource="{Binding Days}" Margin="16">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <UniformGrid Rows="1" Columns="{Binding Days.Count}" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <ItemsControl ItemsSource="{Binding}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <c:LessonCard
+                  Width="{Binding $parent[Canvas].Bounds.Width}"
+                  DataContext="{Binding Lesson}"
+                />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <!-- TODO: make this shit work -->
+            <!-- <ItemsControl.ItemsPanel> -->
+            <!--   <ItemsPanelTemplate> -->
+            <!--     <Canvas /> -->
+            <!--   </ItemsPanelTemplate> -->
+            <!-- </ItemsControl.ItemsPanel> -->
+
+            <ItemsControl.Styles>
+              <Style
+                Selector="ContentPresenter"
+                x:DataType="vm:PositionedLesson"
+              >
+                <Setter
+                  Property="Canvas.Top"
+                  Value="{Binding TopPositionInPixels}"
+                />
+              </Style>
+            </ItemsControl.Styles>
+          </ItemsControl>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+  </ScrollViewer>
+</UserControl>
