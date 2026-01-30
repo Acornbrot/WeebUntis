@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UntisAPI.ResourceTypes;
 
@@ -8,7 +10,7 @@ namespace WeebUntis.ViewModels;
 public partial class TimetableViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private ObservableCollection<ObservableCollection<PositionedLesson>> _days = [];
+    private ObservableCollection<DayData> _days = [];
 
     [ObservableProperty]
     private double _pixelsPerMinute = 2.0;
@@ -20,7 +22,7 @@ public partial class TimetableViewModel : ViewModelBase
     {
         foreach (Day day in timetable.Days)
         {
-            ObservableCollection<PositionedLesson> dayLessons = [];
+            List<PositionedLesson> dayLessons = [];
 
             foreach (Lesson lesson in day.Lessons)
             {
@@ -28,9 +30,16 @@ public partial class TimetableViewModel : ViewModelBase
                 dayLessons.Add(new PositionedLesson(lesson, _dayStartTime, _pixelsPerMinute));
             }
 
-            Days.Add(dayLessons);
+            Days.Add(new DayData(dayLessons));
         }
     }
+}
+
+public class DayData(List<PositionedLesson> lessons)
+{
+    public List<PositionedLesson> Lessons { get; } = lessons;
+    public double MaxHeight =>
+        Lessons.DefaultIfEmpty().Max(l => l!.HeightInPixels + l.TopPositionInPixels);
 }
 
 public class PositionedLesson

@@ -13,9 +13,8 @@
   <Border
     CornerRadius="8"
     Padding="12"
-    Margin="12"
-    BorderThickness="2"
-    BorderBrush="{Binding Color}"
+    BorderThickness="3"
+    BorderBrush="#f555"
     Background="#f444"
   >
     <StackPanel Spacing="4">
@@ -31,6 +30,7 @@
             TextDecorations="Strikethrough"
             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
             Background="{Binding Color}"
+            TextWrapping="Wrap"
             FontSize="14"
           />
         </Border>
@@ -38,6 +38,7 @@
           Text="{Binding Subject.Current.DisplayName}"
           FontWeight="SemiBold"
           FontSize="14"
+          TextWrapping="Wrap"
         />
       </StackPanel>
 
@@ -52,6 +53,7 @@
             Text="{Binding Room.Removed.DisplayName}"
             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
             Background="{Binding Color}"
+            TextWrapping="Wrap"
             FontSize="14"
           >
             <TextBlock.TextDecorations>
@@ -68,6 +70,7 @@
         <TextBlock
           Text="{Binding Room.Current.DisplayName}"
           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
           FontSize="12"
         />
       </StackPanel>
@@ -78,12 +81,14 @@
           Text="{Binding Teacher.Removed.DisplayName}"
           TextDecorations="Strikethrough"
           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+          TextWrapping="Wrap"
           FontSize="12"
         />
         <TextBlock
           Text="{Binding Teacher.Current.DisplayName}"
           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
           FontSize="12"
+          TextWrapping="Wrap"
         />
       </StackPanel>
 
@@ -98,12 +103,14 @@
           TextDecorations="Strikethrough"
           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
           FontSize="11"
+          TextWrapping="Wrap"
           FontStyle="Italic"
         />
         <TextBlock
           Text="{Binding Info.Current.DisplayName}"
           Foreground="{DynamicResource TextFillColorTertiaryBrush}"
           FontSize="11"
+          TextWrapping="Wrap"
           FontStyle="Italic"
         />
       </StackPanel>
