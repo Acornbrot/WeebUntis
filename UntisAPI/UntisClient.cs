@@ -140,7 +140,7 @@ public sealed class UntisClient : IDisposable
     public async Task<TimeTable> GetTimetableAsync(DateTimeOffset start, DateTimeOffset end)
     {
         HttpResponseMessage timetableResponse = await get(
-            $"api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=STUDENT&resources={Student.Id}"
+            $"api/rest/view/v1/timetable/entries?start={start.Date:yyyy-MM-dd}&end={end.Date:yyyy-MM-dd}&resourceType=CLASS&resources={Classes[0].Id}"
         );
         timetableResponse.EnsureSuccessStatusCode();
 
